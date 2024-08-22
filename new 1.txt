@@ -1,0 +1,28 @@
+wishlist-app/
+│
+├── models/	
+│	├──	Item.js
+│   ├── User.js
+│   └── Wishlist.js
+│
+├── public/
+│	├──css/
+│	│   └─ styles.css
+│	│
+│	├──images
+│	│
+│	├──js/
+│	│  ├──scripts.js
+│	│  └──wishlists.js
+│	│
+│   ├── index.html
+│   └── wishlists.html
+│
+├── routes/
+│   └── wishlist.js
+│
+├── server.js
+│
+├── Express.js
+│
+└── package.json
