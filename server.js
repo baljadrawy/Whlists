@@ -1,9 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-
+const User = require('./models/User');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Register new user
+app.post('/api/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    try {
+        const user = new User({ username, email, password });
+        await user.save();
+
+        const token = jwt.sign({ id: user._id }, 'your_jwt_secret');
+        res.status(201).json({ token });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
