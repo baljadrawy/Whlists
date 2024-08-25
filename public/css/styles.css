@@ -18,12 +18,28 @@ header {
     overflow: hidden;
 }
 
-#wishlist {
-    margin: 20px 0;
+form {
+    background: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
 }
 
-#wishlist h2 {
-    color: #333;
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+}
+
+input[type="submit"] {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
 }
 
 #wishlist ul {
