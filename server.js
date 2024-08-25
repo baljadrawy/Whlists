@@ -1,47 +1,31 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');
-const User = require('./models/User');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bodyParser = require('body-parser');
+const authRoutes = require('./routes/auth');
+const wishlistRoutes = require('./routes/wishlist');
+const adminRoutes = require('./routes/admin');
+
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Register new user
-app.post('/api/register', async (req, res) => {
-    const { username, email, password } = req.body;
-    try {
-        const user = new User({ username, email, password });
-        await user.save();
+// إعداد body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-        const token = jwt.sign({ id: user._id }, 'your_jwt_secret');
-        res.status(201).json({ token });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-// اتصال بقاعدة البيانات MongoDB
-mongoose.connect('mongodb://localhost:27017/wishlistDB', {
+// الاتصال بقاعدة البيانات MongoDB
+mongoose.connect('mongodb://localhost:27017/wishlist-app', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(() => {
-    console.log('Connected to MongoDB');
-}).catch((err) => {
-    console.error('Connection error', err);
+    useCreateIndex: true,
 });
 
-// استيراد واستخدام مسار قائمة الأمنيات
-const wishlistRoutes = require('./routes/wishlist');
+// توجيه الطلبات
+app.use('/api/auth', authRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/admin', adminRoutes);
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// إعداد المجلد العام
+app.use(express.static('public'));
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// بدء الخادم
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
